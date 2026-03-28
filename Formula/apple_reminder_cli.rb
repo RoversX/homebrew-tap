@@ -1,9 +1,9 @@
 class AppleReminderCli < Formula
   desc "Manage Apple Reminders from the terminal"
   homepage "https://github.com/roversx/apple_reminder_cli"
-  url "https://github.com/RoversX/apple_reminder_cli/releases/download/v0.1.0/apple_reminder_cli-macos.zip"
-  sha256 "9b96ce85deec9d084a584a1f699f54d1703d9fa3072bca38a862c63cc8021658"
-  version "0.1.0"
+  url "https://github.com/RoversX/apple_reminder_cli/releases/download/v0.1.1/apple_reminder_cli-macos.zip"
+  sha256 "601f11bb17a73bb70fd1fab37204da0f700f05e9f9edc0d6b4233319ba48a58f"
+  version "0.1.1"
 
   depends_on :macos
 
