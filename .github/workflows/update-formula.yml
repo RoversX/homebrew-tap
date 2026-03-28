@@ -1,0 +1,71 @@
+name: Update Formula
+
+on:
+  workflow_dispatch:
+    inputs:
+      formula:
+        description: 'Formula or cask name (e.g., apple_reminder_cli or launchnext)'
+        required: true
+        type: string
+      tag:
+        description: 'Release tag (e.g., v0.1.2 or 2.5.0)'
+        required: true
+        type: string
+      repository:
+        description: 'Source repository (e.g., roversx/apple_reminder_cli)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  update-formula:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout tap repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Update formula or cask
+        run: |
+          FORMULA="${{ github.event.inputs.formula }}"
+          TAG="${{ github.event.inputs.tag }}"
+          REPO="${{ github.event.inputs.repository }}"
+          VERSION="${TAG#v}"
+
+          # Determine file and download URL
+          if [ -f "Formula/${FORMULA}.rb" ]; then
+            FILE="Formula/${FORMULA}.rb"
+            case "${FORMULA}" in
+              apple_reminder_cli) ASSET_NAME="apple_reminder_cli${VERSION}.zip" ;;
+              *) ASSET_NAME="${FORMULA}${VERSION}.zip" ;;
+            esac
+            DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${TAG}/${ASSET_NAME}"
+          elif [ -f "Casks/${FORMULA}.rb" ]; then
+            FILE="Casks/${FORMULA}.rb"
+            case "${FORMULA}" in
+              launchnext) ASSET_NAME="LaunchNext" ;;
+              *) ASSET_NAME="${FORMULA}" ;;
+            esac
+            DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${TAG}/${ASSET_NAME}${VERSION}.zip"
+          else
+            echo "No formula or cask found for ${FORMULA}" >&2
+            exit 1
+          fi
+
+          curl -L "${DOWNLOAD_URL}" -o asset.zip
+          SHA256=$(shasum -a 256 asset.zip | awk '{print $1}')
+
+          sed -i '' "s/version \".*\"/version \"${VERSION}\"/" "${FILE}"
+          sed -i '' "s/sha256 \".*\"/sha256 \"${SHA256}\"/" "${FILE}"
+
+          git add "${FILE}"
+          git commit -m "Update ${FORMULA} to ${TAG}"
+          git push
