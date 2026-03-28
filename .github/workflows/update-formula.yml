@@ -43,11 +43,7 @@ jobs:
           # Determine file and download URL
           if [ -f "Formula/${FORMULA}.rb" ]; then
             FILE="Formula/${FORMULA}.rb"
-            case "${FORMULA}" in
-              apple_reminder_cli) ASSET_NAME="apple_reminder_cli${VERSION}.zip" ;;
-              *) ASSET_NAME="${FORMULA}${VERSION}.zip" ;;
-            esac
-            DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${TAG}/${ASSET_NAME}"
+            DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${TAG}/${FORMULA}-macos.zip"
           elif [ -f "Casks/${FORMULA}.rb" ]; then
             FILE="Casks/${FORMULA}.rb"
             case "${FORMULA}" in
@@ -65,6 +61,7 @@ jobs:
 
           sed -i '' "s/version \".*\"/version \"${VERSION}\"/" "${FILE}"
           sed -i '' "s/sha256 \".*\"/sha256 \"${SHA256}\"/" "${FILE}"
+          sed -i '' "s|releases/download/v[^/]*/|releases/download/v${VERSION}/|" "${FILE}"
 
           git add "${FILE}"
           git commit -m "Update ${FORMULA} to ${TAG}"
