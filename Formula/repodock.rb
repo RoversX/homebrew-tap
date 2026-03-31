@@ -1,9 +1,9 @@
 class Repodock < Formula
   desc "Project-aware TUI launcher"
   homepage "https://github.com/roversx/repodock"
-  url "https://github.com/roversx/repodock/releases/download/0.1.1/repodock-macos.zip"
-  sha256 "082a6f26815b1ea8cb9f54587b831be188165d8b4ee9da0f947a30fe5b393184"
-  version "0.1.1"
+  url "https://github.com/roversx/repodock/releases/download/0.1.2/repodock-macos.zip"
+  sha256 "b027e57fe3a276a591f4a07de10366a152a8dd8fd76d59caab929fe536637381"
+  version "0.1.2"
 
   depends_on :macos
 
