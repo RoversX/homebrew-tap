@@ -14,6 +14,9 @@ case "$TOOL" in
   apple_reminder_cli)
     FILE="Formula/apple_reminder_cli.rb"
     ;;
+  repodock)
+    FILE="Formula/repodock.rb"
+    ;;
   launchnext)
     FILE="Casks/launchnext.rb"
     ;;
