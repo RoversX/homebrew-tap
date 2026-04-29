@@ -15,6 +15,10 @@ on:
         description: 'Source repository (e.g., roversx/apple_reminder_cli)'
         required: true
         type: string
+      sha256:
+        description: 'Optional SHA256 of the release asset. If provided, the workflow skips downloading the asset.'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -38,6 +42,7 @@ jobs:
           FORMULA="${{ github.event.inputs.formula }}"
           TAG="${{ github.event.inputs.tag }}"
           REPO="${{ github.event.inputs.repository }}"
+          SHA256="${{ github.event.inputs.sha256 }}"
           VERSION="${TAG#v}"
 
           # Determine file and download URL
@@ -56,8 +61,10 @@ jobs:
             exit 1
           fi
 
-          curl -L "${DOWNLOAD_URL}" -o asset.zip
-          SHA256=$(shasum -a 256 asset.zip | awk '{print $1}')
+          if [ -z "${SHA256}" ]; then
+            curl -L "${DOWNLOAD_URL}" -o asset.zip
+            SHA256=$(shasum -a 256 asset.zip | awk '{print $1}')
+          fi
 
           sed -i '' "s/version \".*\"/version \"${VERSION}\"/" "${FILE}"
           sed -i '' "s/sha256 \".*\"/sha256 \"${SHA256}\"/" "${FILE}"
