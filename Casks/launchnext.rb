@@ -1,8 +1,8 @@
 cask "launchnext" do
-  version "2.4.1"
-  sha256 "54dac8fac1fb39ec539df69bee44282ed7f77866677163c152137624f69a191c"
+  version "2.4.2"
+  sha256 "647c67cb94ec7b1d91ca612824eabf5bbc4cc81fbb02913bedb6919d4262645d"
 
-  url "https://github.com/RoversX/LaunchNext/releases/download/2.4.1/LaunchNext#{version}.zip"
+  url "https://github.com/RoversX/LaunchNext/releases/download/2.4.2/LaunchNext#{version}.zip"
   name "LaunchNext"
   desc "macOS Launchpad replacement for macOS Tahoe and later"
   homepage "https://github.com/RoversX/LaunchNext"
