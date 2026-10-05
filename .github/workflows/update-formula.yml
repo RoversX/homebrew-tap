@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       formula:
-        description: 'Formula or cask name (e.g., apple_reminder_cli or launchnext)'
+        description: 'Formula or cask name (e.g., apple_reminder_cli, launchnext or thinkterm)'
         required: true
         type: string
       tag:
@@ -44,6 +44,23 @@ jobs:
           REPO="${{ github.event.inputs.repository }}"
           SHA256="${{ github.event.inputs.sha256 }}"
           VERSION="${TAG#v}"
+
+          # ThinkTerm ships one archive per Mac, and its cask a sha256 for each.
+          if [ "${FORMULA}" = "thinkterm" ]; then
+            FILE="Casks/thinkterm.rb"
+            for ARCH in arm64 x86_64; do
+              curl -fL "https://github.com/${REPO}/releases/download/${TAG}/ThinkTerm-macos-${ARCH}-${VERSION}.zip" -o "${ARCH}.zip"
+            done
+            ARM=$(shasum -a 256 arm64.zip | awk '{print $1}')
+            INTEL=$(shasum -a 256 x86_64.zip | awk '{print $1}')
+            sed -i '' "s/version \".*\"/version \"${VERSION}\"/" "${FILE}"
+            sed -i '' "s/arm:   \"[0-9a-f]*\"/arm:   \"${ARM}\"/" "${FILE}"
+            sed -i '' "s/intel: \"[0-9a-f]*\"/intel: \"${INTEL}\"/" "${FILE}"
+            git add "${FILE}"
+            git commit -m "Update ${FORMULA} to ${TAG}"
+            git push
+            exit 0
+          fi
 
           # Determine file and download URL
           if [ -f "Formula/${FORMULA}.rb" ]; then
