@@ -1,9 +1,9 @@
 cask "thinkterm" do
   arch arm: "arm64", intel: "x86_64"
 
-  version "0.1.5"
-  sha256 arm:   "2250562cb72cf5ce50217727f1769cdc29e2e7f4980065afb7f081ee092df4ca",
-         intel: "02102135e0f7f2215c3def15c8f5fa15b61626c09ec309f0fc6f7d59289dba1a"
+  version "0.1.6"
+  sha256 arm:   "eefa40f5279416d3cc4f39f3cd61452739292f178066a639a3aa838fb0025b3a",
+         intel: "9db0f53022b5f61639146fa3bcd67cfbe9a3e62cbdc138f85caa3d4bb9390b62"
 
   url "https://github.com/RoversX/thinkterm/releases/download/#{version}/ThinkTerm-macos-#{arch}-#{version}.zip"
   name "ThinkTerm"
